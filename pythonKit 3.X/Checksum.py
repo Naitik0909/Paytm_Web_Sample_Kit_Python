@@ -23,7 +23,7 @@ def generate_checksum(param_dict, merchant_key, salt=None):
     return __encode__(hash_string, IV, merchant_key)
 
 def generate_refund_checksum(param_dict, merchant_key, salt=None):
-    for i in param_dict:    
+    for i in param_dict:
         if("|" in param_dict[i]):
             param_dict = {}
             exit()
@@ -99,8 +99,8 @@ def __encode__(to_encode, iv, key):
     # Pad
     to_encode = __pad__(to_encode)
     # Encrypt
-    c = AES.new(key, AES.MODE_CBC, iv)
-    to_encode = c.encrypt(to_encode)
+    c = AES.new(key.encode('utf-8'), AES.MODE_CBC, iv.encode('utf-8'))
+    to_encode = c.encrypt(to_encode.encode('utf-8'))
     # Encode
     to_encode = base64.b64encode(to_encode)
     return to_encode.decode("UTF-8")
@@ -110,7 +110,7 @@ def __decode__(to_decode, iv, key):
     # Decode
     to_decode = base64.b64decode(to_decode)
     # Decrypt
-    c = AES.new(key, AES.MODE_CBC, iv)
+    c = AES.new(key.encode('utf-8'), AES.MODE_CBC, iv.encode('utf-8'))
     to_decode = c.decrypt(to_decode)
     if type(to_decode) == bytes:
         # convert bytes array to str.
